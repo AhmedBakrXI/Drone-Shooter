@@ -34,6 +34,7 @@ import javax.sound.sampled.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 
 public class Drone extends Application {
@@ -47,9 +48,7 @@ public class Drone extends Application {
         AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
         Clip clip = AudioSystem.getClip();
         clip.open(audioStream);
-
         clip.start();
-
 
         Application.launch(args);
 
@@ -70,10 +69,18 @@ public class Drone extends Application {
         droneView.setLayoutX(-60);
         droneView.setLayoutY(500);
 
+        Random random = new Random();
+
+        ImageView monster = new ImageView(new Image("images/monster.png"));
+        monster.setLayoutX(40);
+        monster.setLayoutY(40);
+        monster.setScaleX(0.17);
+        monster.setScaleY(0.17);
+
 
         Pane pane = new Pane();
         pane.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image("images/back.png")), new CornerRadii(0), new Insets(0))));
-        pane.getChildren().add(droneView);
+        pane.getChildren().addAll(droneView, monster);
 
 
         Scene mainScene = new Scene(pane, 500, 700);
@@ -101,15 +108,29 @@ public class Drone extends Application {
                     // Update the position of the rectangle
 
                     bullet.setLayoutY(bullet.getLayoutY() - 10);
+                    bullet.setLayoutX(bullet.getLayoutX());
+
+
+                    if(bullet.getLayoutY() == monster.getLayoutY()-700 ){
+                        pane.getChildren().removeAll(bullet,monster);
+                        int x= random.nextInt(500);
+                        int z = random.nextInt(500);
+                        monster.setLayoutX(random.nextInt(100));
+
+//                        pane.getChildren().add(monster);
+                    }
+
 //                    System.out.println(bullet.getLayoutY());
                     /*
                         this part is for testing purposes to continue from here
                         when I have spare time.
                      */
-//
+
                     // End of test
 
                 }));
+
+
 
                 timeline.setCycleCount(70);
                 timeline.play();
